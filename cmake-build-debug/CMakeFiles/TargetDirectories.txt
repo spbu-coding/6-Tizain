@@ -1,0 +1,5 @@
+C:/Users/Timofey/Desktop/tasks/6-Tizain/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Timofey/Desktop/tasks/6-Tizain/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Timofey/Desktop/tasks/6-Tizain/cmake-build-debug/src/CMakeFiles/strings_comparer.dir
+C:/Users/Timofey/Desktop/tasks/6-Tizain/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+C:/Users/Timofey/Desktop/tasks/6-Tizain/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir

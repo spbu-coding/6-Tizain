@@ -1,126 +1,128 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include "sortings.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "sortings.h"
 
- #define  MAX_INPUT_STRING_NUMBER 100
+#define  MAX_INPUT_STRING_NUMBER 100
 
-int console_read(int argc, char* argv[], char **infile, char **outfile, char **sposob_comp, char **sposob_sort, int *str_num) {  // функция обработки команды с консоли
-	char* p;    // блок проверки второго элемента командной строки на число и максимальное кол-во строк
-	long converted = strtol(argv[1], &p, 10);
-	if (*p)  // значит это было не число
-		*str_num = -1;	
-	else    
-		*str_num = (int)converted; 
-	if (converted > MAX_INPUT_STRING_NUMBER) *str_num = -2;
-								// распознавание команд пользователя
-	for (int i = 2; i < argc; i++) {
-		char *last_four = "nope";
-		int len = strlen(argv[i]);
-		if (len > 4) last_four = &argv[i][len-4];
-		if (strcmp (argv[i], "asc")==0)	*sposob_comp = "asc";
-		if (strcmp (argv[i], "des")==0)	*sposob_comp = "des";
-		if (strcmp (argv[i], "bubble")==0)	*sposob_sort = "bubble";
-		if (strcmp (argv[i], "insertion")==0)	*sposob_sort = "insertion";
-		if (strcmp (argv[i], "merge")==0)	*sposob_sort = "merge";
-		if (strcmp (argv[i], "quick")==0)	*sposob_sort = "quick";
-		if (strcmp (argv[i], "radix")==0)	*sposob_sort = "radix";
-		if (strcmp (last_four, ".txt") == 0)	
-			if (*infile == "in") *infile = argv[i];
-			else *outfile = argv[i];
-	}
-								// и обработка возможных ошибок
-	if (*str_num < -2) printf("Its a negative value in the number of strings parameter\n"); 
-	switch (*str_num) {
-		case -2:
-			printf("There is too much strings to sort\n"); 	 
-  			break;
-		case -1:
-			printf("There is not a number in the string number parameter\n"); 
-  			break;
-		case 0:
-			printf("0 strings are allready done\n"); 
-  			break;
-		case 1:
-			printf("It needs 2 or more strings\n"); 
-  			break;
-	}
+int console_read(int argc, char* argv[], char **infile, char **outfile, char **sposob_comp, char **sposob_sort, int *str_num) {  // С„СѓРЅРєС†РёСЏ РѕР±СЂР°Р±РѕС‚РєРё РєРѕРјР°РЅРґС‹ СЃ РєРѕРЅСЃРѕР»Рё
+    char* p;    // Р±Р»РѕРє РїСЂРѕРІРµСЂРєРё РІС‚РѕСЂРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё РЅР° С‡РёСЃР»Рѕ Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»-РІРѕ СЃС‚СЂРѕРє
+    long converted = strtol(argv[1], &p, 10);
+    if (*p)  // Р·РЅР°С‡РёС‚ СЌС‚Рѕ Р±С‹Р»Рѕ РЅРµ С‡РёСЃР»Рѕ
+        *str_num = -1;
+    else
+        *str_num = (int)converted;
+    if (converted > MAX_INPUT_STRING_NUMBER) *str_num = -2;
+    // СЂР°СЃРїРѕР·РЅР°РІР°РЅРёРµ РєРѕРјР°РЅРґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    for (int i = 2; i < argc; i++) {
+        char *last_four = "nope";
+        int len = strlen(argv[i]);
+        if (len > 4) last_four = &argv[i][len-4];
+        if (strcmp (argv[i], "asc")==0)	*sposob_comp = "asc";
+        if (strcmp (argv[i], "des")==0)	*sposob_comp = "des";
+        if (strcmp (argv[i], "bubble")==0)	*sposob_sort = "bubble";
+        if (strcmp (argv[i], "insertion")==0)	*sposob_sort = "insertion";
+        if (strcmp (argv[i], "merge")==0)	*sposob_sort = "merge";
+        if (strcmp (argv[i], "quick")==0)	*sposob_sort = "quick";
+        if (strcmp (argv[i], "radix")==0)	*sposob_sort = "radix";
+        if (strcmp (last_four, ".txt") == 0) {
+            if (strcmp(*infile, "in")==0) {*infile = argv[i]; }
+            else { *outfile = argv[i];}
+        }
+    }
+    // Рё РѕР±СЂР°Р±РѕС‚РєР° РІРѕР·РјРѕР¶РЅС‹С… РѕС€РёР±РѕРє
+    if (*str_num < -2) printf("Its a negative value in the number of strings parameter\n");
+    switch (*str_num) {
+        case -2:
+            printf("There is too much strings to sort\n");
+            break;
+        case -1:
+            printf("There is not a number in the string number parameter\n");
+            break;
+        case 0:
+            printf("0 strings are allready done\n");
+            break;
+        case 1:
+            printf("It needs 2 or more strings\n");
+            break;
+    }
 
-	if (*sposob_comp == "no") printf("The comparator name is needed\n"); 
-	if (*sposob_sort == "no") printf("The sorting name is needed\n"); 	
-	if (*infile == "in" || *outfile == "out") printf("The names of input and output text files are needed\n"); 
-	if (*infile == "in" || *outfile == "out" || *sposob_comp == "no" || *sposob_sort == "no" || *str_num < 2) return -1;
+    if (strcmp(*sposob_comp,"no")==0) printf("The comparator name is needed\n");
+    if (strcmp(*sposob_sort,"no")==0) printf("The sorting name is needed\n");
+    if (strcmp(*infile,"in")==0 || strcmp(*outfile,"out")==0) printf("The names of input and output text files are needed\n");
+    if (strcmp(*infile,"in")==0 || strcmp(*outfile,"out")==0 || strcmp(*sposob_comp,"no")==0 || strcmp(*sposob_sort,"no")==0 || *str_num < 2)
+        return -1;
 
-	return 0;
+    return 0;
 }
 
-int comparator_func_asc(const char* s1, const char* s2)  { // функция сравнения элементов массива на возрастание
-	return strcmp(s1, s2);
+int comparator_func_asc(const char* s1, const char* s2)  { // С„СѓРЅРєС†РёСЏ СЃСЂР°РІРЅРµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ РјР°СЃСЃРёРІР° РЅР° РІРѕР·СЂР°СЃС‚Р°РЅРёРµ
+    return strcmp(s1, s2);
 }
 
-int comparator_func_des(const char* s1, const char* s2)  { // функция сравнения элементов массива на убывание
-	return strcmp(s2, s1);
+int comparator_func_des(const char* s1, const char* s2)  { // С„СѓРЅРєС†РёСЏ СЃСЂР°РІРЅРµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ РјР°СЃСЃРёРІР° РЅР° СѓР±С‹РІР°РЅРёРµ
+    return strcmp(s2, s1);
 }
 
 
 int main(int argc, char* argv[]) {
 
-	if (argc != 6) {
-		printf("The needed command format: strings_comparer 3 input.txt output.txt bubble des\n"); 		
-		return -1;
-	}
+    if (argc != 6) {
+        printf("The needed command format: strings_comparer 3 input.txt output.txt bubble des\n");
+        return -1;
+    }
 
-	FILE *inptr, *outptr;
-	char *infile = "in";
-	char *outfile = "out"; 
-	char *sposob_comp = "no";
-	char *sposob_sort = "no";
-	int str_num = 0;
-								// Чтение команды ввода с консоли и обработка ошибок в этой команде 
-	if (console_read(argc, argv, &infile, &outfile, &sposob_comp, &sposob_sort, &str_num) == -1)  
-			return -1;   
+    FILE *inptr, *outptr;
+    char *infile = "in";
+    char *outfile = "out";
+    char *sposob_comp = "no";
+    char *sposob_sort = "no";
+    int str_num = 0;
+    // Р§С‚РµРЅРёРµ РєРѕРјР°РЅРґС‹ РІРІРѕРґР° СЃ РєРѕРЅСЃРѕР»Рё Рё РѕР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє РІ СЌС‚РѕР№ РєРѕРјР°РЅРґРµ
+    if (console_read(argc, argv, &infile, &outfile, &sposob_comp, &sposob_sort, &str_num) == -1)
+        return -1;
 
-    inptr = fopen(infile, "r");   // Открытие 1 файла на чтение
+    inptr = fopen(infile, "r");   // РћС‚РєСЂС‹С‚РёРµ 1 С„Р°Р№Р»Р° РЅР° С‡С‚РµРЅРёРµ
     if (inptr == NULL) {
         printf("Could not open %s.\n", infile);
         return 0;
     }
-					// выделение памяти для массива, который будет содержать строки из файла и заполнение его
+    // РІС‹РґРµР»РµРЅРёРµ РїР°РјСЏС‚Рё РґР»СЏ РјР°СЃСЃРёРІР°, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р° Рё Р·Р°РїРѕР»РЅРµРЅРёРµ РµРіРѕ
     char **strings_array = (char**)malloc(str_num * (MAX_INPUT_STRING_SIZE + 2));
-	for (int i = 0; i < str_num; i++) {
-		strings_array[i] = (char*)malloc(MAX_INPUT_STRING_SIZE + 2);
-        fgets(strings_array[i], MAX_INPUT_STRING_SIZE + 2, inptr); //+2 (fgets)символы новой и нулевой строки
-	}
+    for (int i = 0; i < str_num; i++) {
+        strings_array[i] = (char*)malloc(MAX_INPUT_STRING_SIZE + 2);
+        fgets(strings_array[i], MAX_INPUT_STRING_SIZE + 2, inptr); //+2 (fgets)СЃРёРјРІРѕР»С‹ РЅРѕРІРѕР№ Рё РЅСѓР»РµРІРѕР№ СЃС‚СЂРѕРєРё
+    }
 
     fclose(inptr);
-								   			// вызов нужной функции сортировки
-	comparator_func_t comparator_func = comparator_func_asc;
-	if (sposob_comp == "des") comparator_func = comparator_func_des;
+    // РІС‹Р·РѕРІ РЅСѓР¶РЅРѕР№ С„СѓРЅРєС†РёРё СЃРѕСЂС‚РёСЂРѕРІРєРё
+    comparator_func_t comparator_func = comparator_func_asc;
+    if (strcmp(sposob_comp,"des")==0) comparator_func = comparator_func_des;
 
-	if (sposob_sort == "bubble") bubble(strings_array, str_num, comparator_func); 
-	if (sposob_sort == "insertion") insertion(strings_array, str_num, comparator_func); 
-	if (sposob_sort == "merge") merge(strings_array, str_num, comparator_func); 
-	if (sposob_sort == "quick") quick(strings_array, str_num, comparator_func); 
-	if (sposob_sort == "radix") radix(strings_array, str_num, comparator_func); 
+    if (strcmp(sposob_sort,"bubble")==0) bubble(strings_array, str_num, comparator_func);
+    if (strcmp(sposob_sort,"insertion")==0) insertion(strings_array, str_num, comparator_func);
+    if (strcmp(sposob_sort,"merge")==0) merge(strings_array, str_num, comparator_func);
+    if (strcmp(sposob_sort,"quick")==0) quick(strings_array, str_num, comparator_func);
+    if (strcmp(sposob_sort,"radix")==0) radix(strings_array, str_num, comparator_func);
 
-	outptr = fopen(outfile, "w");   // Открытие 2 файла на запись
+    outptr = fopen(outfile, "w");   // РћС‚РєСЂС‹С‚РёРµ 2 С„Р°Р№Р»Р° РЅР° Р·Р°РїРёСЃСЊ
     if (outptr == NULL) {
         printf("Could not open %s.\n", outfile);
         return 0;
     }
 
-	int nul_char = 0;  // проверка наличия символа новой строки в последней строке массива 
-	if (strchr (strings_array[str_num-1],'\n') != 0) nul_char = 1;
+    int nul_char = 0;  // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ СЃРёРјРІРѕР»Р° РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё РІ РїРѕСЃР»РµРґРЅРµР№ СЃС‚СЂРѕРєРµ РјР°СЃСЃРёРІР°
+    if (strchr (strings_array[str_num-1],'\n') != 0) nul_char = 1;
 
-    for (int i = 0; i < str_num; i++)  // запись отсортированных строк в файл
+    for (int i = 0; i < str_num; i++)  // Р·Р°РїРёСЃСЊ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹С… СЃС‚СЂРѕРє РІ С„Р°Р№Р»
     {
         fputs(strings_array[i], outptr);
         free(strings_array[i]);
     }
-	if (nul_char == 0) fputs("\n", outptr); // запись символа новой строки в файл, если нужен
+    if (nul_char == 0) fputs("\n", outptr); // Р·Р°РїРёСЃСЊ СЃРёРјРІРѕР»Р° РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё РІ С„Р°Р№Р», РµСЃР»Рё РЅСѓР¶РµРЅ
 
     fclose(outptr);
-    free(strings_array);	
+    free(strings_array);
 
-	return 0;
+    return 0;
 }
