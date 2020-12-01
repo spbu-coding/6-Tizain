@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Timofey/Desktop/tasks/6-Tizain/src/sortings.h
+string.h
+-
+
+C:/Users/Timofey/Desktop/tasks/6-Tizain/src/strings_comparer.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+sortings.h
+C:/Users/Timofey/Desktop/tasks/6-Tizain/src/sortings.h
+
