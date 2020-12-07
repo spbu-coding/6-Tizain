@@ -66,7 +66,7 @@ int comparator_func_des(const char* s1, const char* s2)  { // функция с�
 
 
 int main(int argc, char* argv[]) {
-
+	if (argc == 1) return 0;
     if (argc != 6) {
         printf("The needed command format: strings_comparer 3 input.txt output.txt bubble des\n");
         return -1;
