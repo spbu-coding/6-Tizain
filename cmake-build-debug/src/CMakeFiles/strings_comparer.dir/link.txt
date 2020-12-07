@@ -1,3 +1,0 @@
-"D:\Program Files\JetBrains\CLion 2020.2.3\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\strings_comparer.dir/objects.a
-"D:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\ar.exe" cr CMakeFiles\strings_comparer.dir/objects.a @CMakeFiles\strings_comparer.dir\objects1.rsp
-"D:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\gcc.exe" -g   -Wl,--whole-archive CMakeFiles\strings_comparer.dir/objects.a -Wl,--no-whole-archive  -o strings_comparer.exe -Wl,--out-implib,libstrings_comparer.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\strings_comparer.dir\linklibs.rsp
