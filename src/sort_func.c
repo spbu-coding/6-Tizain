@@ -67,6 +67,7 @@ void merge(strings_array_t strings_array, array_size_t array_size, comparator_fu
             strings_array[i] = temp[i];
         step *= 2; // увеличиваем в 2 раза шаг разбиения
     }
+	free(temp);
 }
 
 void quick(strings_array_t strings_array, array_size_t array_size, comparator_func_t comparator_func) {
