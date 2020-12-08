@@ -120,6 +120,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < str_num; i++)  // запись отсортированных строк в файл
     {
         fputs(strings_array[i], outptr);
+		free(strings_array[i]);
     }
     if (nul_char == 0) fputs("\n", outptr); // запись символа новой строки в файл, если нужен
 
