@@ -3,7 +3,7 @@
 #include <string.h>
 #include "sortings.h"
 
-#define  MAX_INPUT_STRING_NUMBER 100
+#define  MAX_INPUT_STRING_NUMBER 100000
 
 int console_read(int argc, char* argv[], char **infile, char **outfile, char **sposob_comp, char **sposob_sort, int *str_num) {  // функция обработки команды с консоли
     char* p;    // блок проверки второго элемента командной строки на число и максимальное кол-во строк
@@ -16,7 +16,7 @@ int console_read(int argc, char* argv[], char **infile, char **outfile, char **s
     // распознавание команд пользователя
     for (int i = 2; i < argc; i++) {
         char *last_four = "nope";
-        int len = strlen(argv[i]);
+        size_t len = strlen(argv[i]);
         if (len > 4) last_four = &argv[i][len-4];
         if (strcmp (argv[i], "asc")==0)	*sposob_comp = "asc";
         if (strcmp (argv[i], "des")==0)	*sposob_comp = "des";
@@ -39,19 +39,13 @@ int console_read(int argc, char* argv[], char **infile, char **outfile, char **s
         case -1:
             printf("There is not a number in the string number parameter\n");
             break;
-        case 0:
-            printf("0 strings are allready done\n");
-            break;
-        case 1:
-            printf("It needs 2 or more strings\n");
-            break;
-    }
+   }
 
     if (strcmp(*sposob_comp,"no")==0) printf("The comparator name is needed\n");
     if (strcmp(*sposob_sort,"no")==0) printf("The sorting name is needed\n");
     if (strcmp(*infile,"in")==0 || strcmp(*outfile,"out")==0) printf("The names of input and output text files are needed\n");
-    if (strcmp(*infile,"in")==0 || strcmp(*outfile,"out")==0 || strcmp(*sposob_comp,"no")==0 || strcmp(*sposob_sort,"no")==0 || *str_num < 2)
-        return -1;
+    if (strcmp(*infile,"in")==0 || strcmp(*outfile,"out")==0 || strcmp(*sposob_comp,"no")==0 || strcmp(*sposob_sort,"no")==0 || *str_num < 0)
+	    return -1;
 
     return 0;
 }
@@ -66,10 +60,9 @@ int comparator_func_des(const char* s1, const char* s2)  { // функция с�
 
 
 int main(int argc, char* argv[]) {
-	if (argc == 1) {
-		printf("\n");
-		return 0;
-	}
+
+	if (argc < 2) return 0;
+
     if (argc != 6) {
         printf("The needed command format: strings_comparer 3 input.txt output.txt bubble des\n");
         return -1;
@@ -82,22 +75,35 @@ int main(int argc, char* argv[]) {
     char *sposob_sort = "no";
     int str_num = 0;
     // Чтение команды ввода с консоли и обработка ошибок в этой команде
-    if (console_read(argc, argv, &infile, &outfile, &sposob_comp, &sposob_sort, &str_num) == -1)
+    if (console_read(argc, argv, &infile, &outfile, &sposob_comp, &sposob_sort, &str_num) == -1) {
         return -1;
+    }
+	if (str_num == 0) {
+    	outptr = fopen(outfile, "w");   // Открытие 2 файла на запись
+    	if (outptr == NULL) {
+        	printf("Could not open %s.\n", outfile);
+        	return -1;
+    	}
+		fclose(outptr);
+		return 0;
+	}
 
     inptr = fopen(infile, "r");   // Открытие 1 файла на чтение
     if (inptr == NULL) {
         printf("Could not open %s.\n", infile);
-        return 0;
+        return -1;
     }
+
     // выделение памяти для массива, который будет содержать строки из файла и заполнение его
     char **strings_array = (char**)malloc(str_num * (MAX_INPUT_STRING_SIZE + 2));
     for (int i = 0; i < str_num; i++) {
         strings_array[i] = (char*)malloc(MAX_INPUT_STRING_SIZE + 2);
         fgets(strings_array[i], MAX_INPUT_STRING_SIZE + 2, inptr); //+2 (fgets)символы новой и нулевой строки
     }
-
     fclose(inptr);
+
+	if (str_num == 1) goto Label_1;
+
     // вызов нужной функции сортировки
     comparator_func_t comparator_func = comparator_func_asc;
     if (strcmp(sposob_comp,"des")==0) comparator_func = comparator_func_des;
@@ -107,25 +113,28 @@ int main(int argc, char* argv[]) {
     if (strcmp(sposob_sort,"merge")==0) merge(strings_array, str_num, comparator_func);
     if (strcmp(sposob_sort,"quick")==0) quick(strings_array, str_num, comparator_func);
     if (strcmp(sposob_sort,"radix")==0) radix(strings_array, str_num, comparator_func);
-
+	
+	Label_1:
     outptr = fopen(outfile, "w");   // Открытие 2 файла на запись
     if (outptr == NULL) {
         printf("Could not open %s.\n", outfile);
-        return 0;
+   		for (int i = 0; i < str_num; i++) 
+			free(strings_array[i]);
+	    free(strings_array);
+        return -1;
     }
-
-    int nul_char = 0;  // проверка наличия символа новой строки в последней строке массива
-    if (strchr (strings_array[str_num-1],'\n') != 0) nul_char = 1;
+	
+	if (strchr(strings_array[str_num-1],'\n') == 0) // вставить символ новой строки в конец, если его нет
+		strings_array[str_num-1][strlen(strings_array[str_num-1])] = '\n';
 
     for (int i = 0; i < str_num; i++)  // запись отсортированных строк в файл
     {
-        fputs(strings_array[i], outptr);
+		fputs(strings_array[i], outptr);
 		free(strings_array[i]);
     }
-    if (nul_char == 0) fputs("\n", outptr); // запись символа новой строки в файл, если нужен
+    free(strings_array);    
 
-    fclose(outptr);
-    free(strings_array);
+	fclose(outptr);
 
     return 0;
 }
