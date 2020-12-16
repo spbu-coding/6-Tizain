@@ -84,6 +84,7 @@ int main(int argc, char* argv[]) {
         	printf("Could not open %s.\n", outfile);
         	return -1;
     	}
+		fputs("\n", outptr);
 		fclose(outptr);
 		return 0;
 	}
@@ -102,6 +103,9 @@ int main(int argc, char* argv[]) {
     }
     fclose(inptr);
 
+	if (strchr(strings_array[str_num-1],'\n') == 0)  // вставить символ новой строки в конец, если его нет
+		strings_array[str_num-1][strlen(strings_array[str_num-1])] = '\n';
+	
 	if (str_num == 1) goto Label_1;
 
     // вызов нужной функции сортировки
@@ -124,10 +128,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 	
-	if (strchr(strings_array[str_num-1],'\n') == 0) // вставить символ новой строки в конец, если его нет
-		strings_array[str_num-1][strlen(strings_array[str_num-1])] = '\n';
-
-    for (int i = 0; i < str_num; i++)  // запись отсортированных строк в файл
+	for (int i = 0; i < str_num; i++)  // запись отсортированных строк в файл
     {
 		fputs(strings_array[i], outptr);
 		free(strings_array[i]);
