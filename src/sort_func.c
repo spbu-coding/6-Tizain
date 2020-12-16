@@ -26,7 +26,7 @@ void insertion(strings_array_t strings_array, array_size_t array_size, comparato
  
     for (size_t i = 1; i < array_size; i++)   {
         tmp = strings_array[i];
-        walk_var = i - 1;
+        walk_var = (int)i - 1;
 		while(walk_var >= 0 && comparator_func(strings_array[walk_var],tmp) > 0)
         {
             strings_array[walk_var+1] = strings_array[walk_var];
@@ -38,13 +38,9 @@ void insertion(strings_array_t strings_array, array_size_t array_size, comparato
 
 void merge(strings_array_t strings_array, array_size_t array_size, comparator_func_t comparator_func) {
 
-    // ћетод восход€щего сли€ни€
-    size_t step = 1;  // шаг разбиени€ последовательности
-    char **temp = (char **) malloc(array_size * (MAX_INPUT_STRING_SIZE + 2)); // дополнительный массив
-    for (size_t i = 0; i < array_size; i++) {
-        temp[i] = (char *) malloc(MAX_INPUT_STRING_SIZE + 2);
-    }
-
+	// ћетод восход€щего сли€ни€
+	size_t step = 1;  // шаг разбиени€ последовательности
+	char* temp[array_size];
 	while (step < array_size)  { // пока шаг меньше длины массива
     	size_t index = 0;    // индекс результирующего массива
     	size_t l = 0;      // лева€ граница участка
@@ -55,9 +51,9 @@ void merge(strings_array_t strings_array, array_size_t array_size, comparator_fu
       		r = r < array_size ? r : array_size;
       		size_t i1 = l, i2 = m; // индексы сравниваемых элементов
       		for (; i1 < m && i2 < r; ) { // пока i1 не дошЄл до середины и i2 не дошЄл до конца
-				if (comparator_func(strings_array[i1],strings_array[i2])<0) 
-					temp[index++] = strings_array[i1++];  // заполн€ем участок результирующей последовательности
-	      		else  temp[index++] = strings_array[i2++]; 
+				if (comparator_func(strings_array[i1],strings_array[i2])<0) {
+                    temp[index++] = strings_array[i1++];  // заполн€ем участок результирующей последовательности
+                } else  temp[index++] = strings_array[i2++];
       		}
       		// »ли i1 < m или i2 < r - только один из операторов while может выполнитьс€
       		while (i1 < m) temp[index++] = strings_array[i1++]; // заносим оставшиес€ элементы сортируемых участков
@@ -70,15 +66,12 @@ void merge(strings_array_t strings_array, array_size_t array_size, comparator_fu
       		strings_array[i] = temp[i];
     	step *= 2; // увеличиваем в 2 раза шаг разбиени€
 	}
-    for (size_t i = 0; i < array_size; i++)  // запись отсортированных строк в файл
-		free(temp[i]);
-	free(temp);
 }
 
 void quick(strings_array_t strings_array, array_size_t array_size, comparator_func_t comparator_func) {
 
     int left = 0;     //”казатели в начало и в конец массива
-	int right = array_size - 1; 
+	int right = (int)array_size - 1;
 	char *mid, *temp;
 
     mid = strings_array[array_size / 2];  //÷ентральный элемент массива
@@ -109,7 +102,7 @@ void radix(strings_array_t strings_array, array_size_t array_size, comparator_fu
     int addit_arr[array_size]; 
 	int max_addit_arr = 0;
     for (unsigned int i = 0; i < array_size; i++) {
-        addit_arr[i] = strlen(strings_array[i]) - 1;
+        addit_arr[i] = (int)strlen(strings_array[i]) - 1;
         if (addit_arr[i] > max_addit_arr)  max_addit_arr = addit_arr[i];
 	}
     for (int i = (int) max_addit_arr - 1; i >= 0; i--) {
