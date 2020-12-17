@@ -94,6 +94,17 @@ int main(int argc, char* argv[]) {
         printf("Could not open %s.\n", infile);
         return -1;
     }
+	
+	int lines_count = 0;   // количество строк в файле
+	rewind(inptr);
+	while (!ferror(inptr) && !feof(inptr)) {
+		if (fgetc(inptr) == '\n') ++lines_count;
+	}
+
+	if (lines_count < str_num) { 
+		printf("Requested more lines than in file\n");	
+		return -1;	
+	}
 
     // выделение памяти для массива, который будет содержать строки из файла и заполнение его
     char **strings_array = (char**)malloc(str_num * (MAX_INPUT_STRING_SIZE + 2));
